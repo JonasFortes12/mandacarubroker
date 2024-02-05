@@ -38,3 +38,6 @@ build/
 .env.test.local
 .env.production.local
 .env.local
+
+# dependencies version backup
+pom.xml.versionsBackup
