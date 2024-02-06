@@ -26,13 +26,13 @@ public class Stock {
     private String companyName;
     private double price;
 
-    public Stock(RequestStockDTO requestStockDTO){
+    public Stock(final RequestStockDTO requestStockDTO){
         this.symbol = requestStockDTO.symbol();
         this.companyName = requestStockDTO.companyName();
         this.price = changePrice(requestStockDTO.price(), true);
     }
 
-    public double changePrice(double amount, boolean increase) {
+    public double changePrice(final double amount, final boolean increase) {
         if (increase) {
             if (amount < this.price) {
                 return increasePrice(amount);
@@ -48,11 +48,11 @@ public class Stock {
         }
     }
 
-    public double increasePrice(double amount) {
+    public double increasePrice(final double amount) {
         return this.price + amount;
     }
 
-    public double decreasePrice(double amount) {
+    public double decreasePrice(final double amount) {
         return this.price - amount;
     }
 

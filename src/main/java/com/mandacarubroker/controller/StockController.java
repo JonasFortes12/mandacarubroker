@@ -25,7 +25,7 @@ public class StockController {
 
     private final StockService stockService;
 
-    public StockController(StockService stockService) {
+    public StockController(final StockService stockService) {
         this.stockService = stockService;
     }
 
@@ -35,23 +35,23 @@ public class StockController {
     }
 
     @GetMapping("/{id}")
-    public Stock getStockById(@PathVariable String id) {
+    public Stock getStockById(final @PathVariable String id) {
         return stockService.getStockById(id).orElse(null);
     }
 
     @PostMapping
-    public ResponseEntity<Stock> createStock(@RequestBody RequestStockDTO data) {
+    public ResponseEntity<Stock> createStock(final @RequestBody RequestStockDTO data) {
         Stock createdStock = stockService.createStock(data);
         return ResponseEntity.ok(createdStock);
     }
 
     @PutMapping("/{id}")
-    public Stock updateStock(@PathVariable String id, @RequestBody Stock updatedStock) {
+    public Stock updateStock(final @PathVariable String id, final @RequestBody Stock updatedStock) {
         return stockService.updateStock(id, updatedStock).orElse(null);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteStock(@PathVariable String id) {
+    public void deleteStock(final @PathVariable String id) {
         stockService.deleteStock(id);
     }
 
