@@ -34,7 +34,8 @@ public class StockController {
      * Constructs a StockController with the specified StockService.
      * This constructor initializes a StockController with the provided StockService.
      *
-     * @param stockService The StockService instance used by the controller for stock-related operations.
+     * @param stockService The StockService instance used by the controller
+     *                     for stock-related operations.
      */
     public StockController(final StockService stockService) {
         this.stockService = stockService;
