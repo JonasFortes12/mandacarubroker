@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 
 public record RequestStockDTO(
         @Pattern(
-                regexp = "[A-Za-z]{2}[0-9]{1}",
+                regexp = "[A-Za-z]{2}//d",
                 message = "Symbol must be 3 letters followed by 1 number"
         )
         String symbol,
