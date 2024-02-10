@@ -86,6 +86,7 @@ class StockControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+
     @Test
     void itShouldCreateNewStock() throws Exception {
         RequestStockDTO newStock = new RequestStockDTO("CMG4", "CEMIG", 129.67);
@@ -106,6 +107,20 @@ class StockControllerTest {
     }
 
 
+    @Test
+    void itShouldNotCreateNewStockWithExistentSymbol() throws Exception {
+        RequestStockDTO newStock = new RequestStockDTO("RPM3", "PETROLEUM", 134.67);
+
+        String requestJson = objectMapper.writeValueAsString(newStock);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/stocks")
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isConflict());
+    }
 
 
 }
