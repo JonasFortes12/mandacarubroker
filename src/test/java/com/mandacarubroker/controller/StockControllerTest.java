@@ -123,5 +123,28 @@ class StockControllerTest {
     }
 
 
+    @Test
+    void itShouldUpdateStock() throws Exception {
+
+        Stock targetUpdatingStock = stockRepository.findAll().get(0);
+
+        targetUpdatingStock.setSymbol("PTL3");
+
+        String requestJson = objectMapper.writeValueAsString(targetUpdatingStock);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .put("/stocks/{id}", targetUpdatingStock.getId())
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.symbol").value(targetUpdatingStock.getSymbol()))
+                .andExpect(jsonPath("$.companyName").value(targetUpdatingStock.getCompanyName()))
+                .andExpect(jsonPath("$.price").value(targetUpdatingStock.getPrice()));
+
+    }
+
+
 }
 
