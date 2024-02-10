@@ -165,5 +165,21 @@ class StockControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+
+    @Test
+    void itShouldDeleteStock() throws Exception  {
+
+        Stock targetDeletingStock = stockRepository.findAll().get(0);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .delete("/stocks/{id}", targetDeletingStock.getId());
+
+        mockMvc.perform(request)
+                .andExpect(status().isNoContent());
+
+    }
+
+
+
 }
 
