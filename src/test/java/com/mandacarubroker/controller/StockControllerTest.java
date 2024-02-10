@@ -146,5 +146,24 @@ class StockControllerTest {
     }
 
 
+    @Test
+    void itShouldNotUpdateStockWithNonexistentId() throws Exception {
+
+        String nonexistentId = "1a2b3c2d";
+        String requestJson = "{"
+                + "\"symbol\":\"EQT3\","
+                + "\"companyName\":\"EQUATORIAL\","
+                + "\"price\":128.12"
+                + "}";
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .put("/stocks/{id}", nonexistentId)
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound());
+    }
+
 }
 
