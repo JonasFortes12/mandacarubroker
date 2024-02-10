@@ -1,6 +1,7 @@
 package com.mandacarubroker.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mandacarubroker.domain.stock.RequestStockDTO;
 import com.mandacarubroker.domain.stock.Stock;
 import com.mandacarubroker.domain.stock.StockRepository;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +35,8 @@ class StockControllerTest {
     @Autowired
     private StockRepository stockRepository;
 
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void initRepository() {
@@ -81,6 +85,26 @@ class StockControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void itShouldCreateNewStock() throws Exception {
+        RequestStockDTO newStock = new RequestStockDTO("CMG4", "CEMIG", 129.67);
+
+        String requestJson = objectMapper.writeValueAsString(newStock);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/stocks")
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.symbol").value(newStock.symbol()))
+                .andExpect(jsonPath("$.companyName").value(newStock.companyName()))
+                .andExpect(jsonPath("$.price").value(newStock.price()));
+
+    }
+
 
 
 
