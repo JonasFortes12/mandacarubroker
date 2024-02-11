@@ -179,7 +179,18 @@ class StockControllerTest {
 
     }
 
+    @Test
+    void itShouldNotDeleteStockWithNonexistentId() throws Exception  {
 
+        String nonexistentId = "1a2b3c2d";
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .delete("/stocks/{id}", nonexistentId);
+
+        mockMvc.perform(request)
+                .andExpect(status().isNotFound());
+
+    }
 
 }
 
