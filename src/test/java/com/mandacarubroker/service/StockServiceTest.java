@@ -38,7 +38,7 @@ class StockServiceTest {
     }
 
 
-    
+
     @Test
     void itShouldGetAllStocks() {
 
@@ -56,6 +56,18 @@ class StockServiceTest {
             assertEquals(retrievesStocks.get(i).getPrice(), expectedStocks.get(i).getPrice());
         }
 
+
+    }
+
+    @Test
+    void itShouldGetStockById(){
+        Stock targetStock = stockRepository.findAll().get(0);
+
+        Optional<Stock> retrievesStocks = stockService.getStockById(targetStock.getId());
+
+        assertEquals(retrievesStocks.get().getSymbol(), targetStock.getSymbol());
+        assertEquals(retrievesStocks.get().getCompanyName(), targetStock.getCompanyName());
+        assertEquals(retrievesStocks.get().getPrice(), targetStock.getPrice());
 
     }
 
