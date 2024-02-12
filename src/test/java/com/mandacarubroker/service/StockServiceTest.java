@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,34 +25,39 @@ class StockServiceTest {
     @Autowired
     private StockRepository stockRepository;
 
+    @BeforeEach
+    public void initRepository() {
+        stockRepository.save(new Stock(new RequestStockDTO("RPM3", "3R PETROLEUM", 90.45)));
+        stockRepository.save(new Stock(new RequestStockDTO("ALL3", "ALLOS", 121.60)));
+        stockRepository.save(new Stock(new RequestStockDTO("AZL4", "AZUL", 230.20)));
+    }
 
-    private void saveStock(Stock stock) {
-        stockRepository.save(stock);
+    @AfterEach
+    public void clearRepository() {
+        stockRepository.deleteAll();
     }
 
 
+    
     @Test
     void itShouldGetAllStocks() {
-        Stock stock01 = new Stock(new RequestStockDTO("RPM3", "3R PETROLEUM", 90.45));
-        Stock stock02 = new Stock(new RequestStockDTO("ALL3", "ALLOS", 121.60));
 
-        saveStock(stock01);
-        saveStock(stock02);
+        List<Stock> expectedStocks = List.of(
+            new Stock(new RequestStockDTO("RPM3", "3R PETROLEUM", 90.45)),
+            new Stock(new RequestStockDTO("ALL3", "ALLOS", 121.60)),
+            new Stock(new RequestStockDTO("AZL4", "AZUL", 230.20))
+        );
 
         List<Stock> retrievesStocks = stockService.getAllStocks();
 
-        assertEquals(retrievesStocks.get(0).getSymbol(), stock01.getSymbol());
-        assertEquals(retrievesStocks.get(1).getSymbol(), stock02.getSymbol());
+        for (int i = 0; i < retrievesStocks.size(); i++){
+            assertEquals(retrievesStocks.get(i).getSymbol(), expectedStocks.get(i).getSymbol());
+            assertEquals(retrievesStocks.get(i).getCompanyName(), expectedStocks.get(i).getCompanyName());
+            assertEquals(retrievesStocks.get(i).getPrice(), expectedStocks.get(i).getPrice());
+        }
 
-        assertEquals(retrievesStocks.get(0).getCompanyName(), stock01.getCompanyName());
-        assertEquals(retrievesStocks.get(1).getCompanyName(), stock02.getCompanyName());
-
-        assertEquals(retrievesStocks.get(0).getPrice(), stock01.getPrice());
-        assertEquals(retrievesStocks.get(1).getPrice(), stock02.getPrice());
 
     }
-
-
 
 
 
