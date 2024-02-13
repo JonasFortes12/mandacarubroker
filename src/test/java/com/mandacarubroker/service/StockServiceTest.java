@@ -71,8 +71,19 @@ class StockServiceTest {
 
     }
 
+    @Test
+    void itShouldCreateNewStock(){
 
+        RequestStockDTO newStock = new RequestStockDTO("CMG4", "CEMIG", 129.67);
 
+         stockService.createStock(newStock);
 
+        Stock retrievesStock = stockRepository.findAll().get(3);
+
+        assertEquals(newStock.symbol(), retrievesStock.getSymbol());
+        assertEquals(newStock.companyName(), retrievesStock.getCompanyName());
+        assertEquals(newStock.price(), retrievesStock.getPrice());
+
+    }
 
 }
