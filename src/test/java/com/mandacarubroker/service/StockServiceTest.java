@@ -123,6 +123,19 @@ class StockServiceTest {
         assertEquals(Optional.empty(), stockRepository.findById(targetDeletingStock.getId()));
     }
 
+    @Test
+    void itShouldNotThrowsExceptionOnValidateRequestStockDTO(){
+
+        RequestStockDTO dataToValidate = new RequestStockDTO("RPM2", "2R PETROLEUM", 103.95);
+
+        assertDoesNotThrow(() -> {
+            StockService.validateRequestStockDTO(dataToValidate);
+        });
+    }
+
+
+
+
 
 }
 
