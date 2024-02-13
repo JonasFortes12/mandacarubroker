@@ -86,4 +86,15 @@ class StockServiceTest {
 
     }
 
+    @Test
+    void itShouldNotCreateInvalidNewStock(){
+        RequestStockDTO newStock = new RequestStockDTO("CMIG4", "CEMIG", 129.67);
+
+        assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
+            stockService.createStock(newStock);
+        });
+
+    }
+
+
 }
