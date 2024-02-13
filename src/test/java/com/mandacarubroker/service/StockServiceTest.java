@@ -96,5 +96,30 @@ class StockServiceTest {
 
     }
 
+    @Test
+    void itShouldUpdateStock(){
+
+        Stock stockForUpdate = new Stock(new RequestStockDTO("RPM2", "2R PETROLEUM", 103.95));
+
+        Stock targetUpdatingStock = stockRepository.findAll().get(0);
+
+        stockService.updateStock(targetUpdatingStock.getId(), stockForUpdate);
+
+        Optional<Stock> updatedStock = stockRepository.findById(targetUpdatingStock.getId());
+
+        assertEquals(stockForUpdate.getSymbol(), updatedStock.get().getSymbol());
+        assertEquals(stockForUpdate.getCompanyName(), updatedStock.get().getCompanyName());
+        assertEquals(stockForUpdate.getPrice(), updatedStock.get().getPrice());
+
+    }
+
+
+
+
+
+
+
 
 }
+
+
