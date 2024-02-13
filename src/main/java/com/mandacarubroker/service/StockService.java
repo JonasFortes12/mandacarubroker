@@ -70,7 +70,7 @@ public class StockService {
      *
      * @param data The data representing the new stock to be created.
      * @return The created stock entity.
-     * @throws IllegalArgumentException If the provided data is not valid.
+     * @throws ConstraintViolationException If the provided data is not valid.
      */
     public Stock createStock(final RequestStockDTO data) {
         Stock novaAcao = new Stock(data);
