@@ -113,11 +113,15 @@ class StockServiceTest {
 
     }
 
+    @Test
+    void itShouldDeleteStock(){
 
+        Stock targetDeletingStock = stockRepository.findAll().get(0);
 
+        stockService.deleteStock(targetDeletingStock.getId());
 
-
-
+        assertEquals(Optional.empty(), stockRepository.findById(targetDeletingStock.getId()));
+    }
 
 
 }
