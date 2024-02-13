@@ -134,7 +134,7 @@ class StockServiceTest {
     }
 
     @Test
-    void itShouldThrowsExceptidonOnValidsateRequestStockDTOWithInvalidSymbol() {
+    void itShouldThrowsExceptionOnValidateRequestStockDTOWithInvalidSymbol() {
 
         RequestStockDTO dataToValidate =
                 new RequestStockDTO("RPTM2", "2R PETROLEUM", 103.95);
@@ -145,7 +145,7 @@ class StockServiceTest {
     }
 
     @Test
-    void itShouldThrowsExceptidonOnValidsateRequestStockDTOWithCompanyNameBlank() {
+    void itShouldThrowsExceptionOnValidateRequestStockDTOWithCompanyNameBlank() {
 
         RequestStockDTO dataToValidate =
                 new RequestStockDTO("RPM2", "   ", 103.95);
@@ -156,7 +156,7 @@ class StockServiceTest {
     }
 
     @Test
-    void itShouldThrowsExceptidonOnValidsateRequestStockDTOWithPriceNull() {
+    void itShouldThrowsExceptionOnValidateRequestStockDTOWithPriceNull() {
 
         RequestStockDTO dataToValidate =
                 new RequestStockDTO("RPM2", "2R PETROLEUM", 0);
@@ -168,7 +168,7 @@ class StockServiceTest {
 
 
     @Test
-    void itShouldThrowsExceptidonOnValidsateRequestStockDTOWithPriceNegative() {
+    void itShouldThrowsExceptionOnValidateRequestStockDTOWithPriceNegative() {
         RequestStockDTO dataToValidate =
                 new RequestStockDTO("RPM2", "2R PETROLEUM", -103.95);
 
