@@ -6,6 +6,7 @@ import com.mandacarubroker.domain.stock.StockRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,19 +39,18 @@ class StockServiceTest {
     }
 
 
-
     @Test
     void itShouldGetAllStocks() {
 
         List<Stock> expectedStocks = List.of(
-            new Stock(new RequestStockDTO("RPM3", "3R PETROLEUM", 90.45)),
-            new Stock(new RequestStockDTO("ALL3", "ALLOS", 121.60)),
-            new Stock(new RequestStockDTO("AZL4", "AZUL", 230.20))
+                new Stock(new RequestStockDTO("RPM3", "3R PETROLEUM", 90.45)),
+                new Stock(new RequestStockDTO("ALL3", "ALLOS", 121.60)),
+                new Stock(new RequestStockDTO("AZL4", "AZUL", 230.20))
         );
 
         List<Stock> retrievesStocks = stockService.getAllStocks();
 
-        for (int i = 0; i < retrievesStocks.size(); i++){
+        for (int i = 0; i < retrievesStocks.size(); i++) {
             assertEquals(retrievesStocks.get(i).getSymbol(), expectedStocks.get(i).getSymbol());
             assertEquals(retrievesStocks.get(i).getCompanyName(), expectedStocks.get(i).getCompanyName());
             assertEquals(retrievesStocks.get(i).getPrice(), expectedStocks.get(i).getPrice());
@@ -60,7 +60,7 @@ class StockServiceTest {
     }
 
     @Test
-    void itShouldGetStockById(){
+    void itShouldGetStockById() {
         Stock targetStock = stockRepository.findAll().get(0);
 
         Optional<Stock> retrievesStocks = stockService.getStockById(targetStock.getId());
@@ -72,11 +72,11 @@ class StockServiceTest {
     }
 
     @Test
-    void itShouldCreateNewStock(){
+    void itShouldCreateNewStock() {
 
         RequestStockDTO newStock = new RequestStockDTO("CMG4", "CEMIG", 129.67);
 
-         stockService.createStock(newStock);
+        stockService.createStock(newStock);
 
         Stock retrievesStock = stockRepository.findAll().get(3);
 
@@ -87,7 +87,7 @@ class StockServiceTest {
     }
 
     @Test
-    void itShouldNotCreateInvalidNewStock(){
+    void itShouldNotCreateInvalidNewStock() {
         RequestStockDTO newStock = new RequestStockDTO("CMIG4", "CEMIG", 129.67);
 
         assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
@@ -97,7 +97,7 @@ class StockServiceTest {
     }
 
     @Test
-    void itShouldUpdateStock(){
+    void itShouldUpdateStock() {
 
         Stock stockForUpdate = new Stock(new RequestStockDTO("RPM2", "2R PETROLEUM", 103.95));
 
@@ -114,7 +114,7 @@ class StockServiceTest {
     }
 
     @Test
-    void itShouldDeleteStock(){
+    void itShouldDeleteStock() {
 
         Stock targetDeletingStock = stockRepository.findAll().get(0);
 
@@ -133,8 +133,49 @@ class StockServiceTest {
         });
     }
 
+    @Test
+    void itShouldThrowsExceptidonOnValidsateRequestStockDTOWithInvalidSymbol() {
+
+        RequestStockDTO dataToValidate =
+                new RequestStockDTO("RPTM2", "2R PETROLEUM", 103.95);
+
+        assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
+            StockService.validateRequestStockDTO(dataToValidate);
+        });
+    }
+
+    @Test
+    void itShouldThrowsExceptidonOnValidsateRequestStockDTOWithCompanyNameBlank() {
+
+        RequestStockDTO dataToValidate =
+                new RequestStockDTO("RPM2", "   ", 103.95);
+
+        assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
+            StockService.validateRequestStockDTO(dataToValidate);
+        });
+    }
+
+    @Test
+    void itShouldThrowsExceptidonOnValidsateRequestStockDTOWithPriceNull() {
+
+        RequestStockDTO dataToValidate =
+                new RequestStockDTO("RPM2", "2R PETROLEUM", 0);
+
+        assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
+            StockService.validateRequestStockDTO(dataToValidate);
+        });
+    }
 
 
+    @Test
+    void itShouldThrowsExceptidonOnValidsateRequestStockDTOWithPriceNegative() {
+        RequestStockDTO dataToValidate =
+                new RequestStockDTO("RPM2", "2R PETROLEUM", -103.95);
+
+        assertThrows(jakarta.validation.ConstraintViolationException.class, () -> {
+            StockService.validateRequestStockDTO(dataToValidate);
+        });
+    }
 
 
 }
