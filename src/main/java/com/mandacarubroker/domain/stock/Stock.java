@@ -48,14 +48,13 @@ public class Stock {
      *
      * This constructor initializes a new Stock object. It extracts the symbol, company name,
      * and price from the RequestStockDTO and sets the corresponding attributes of the Stock.
-     * Additionally, it calculates the new price using the changePrice method.
      *
      * @param requestStockDTO The RequestStockDTO containing data for initializing the Stock.
      */
     public Stock(final RequestStockDTO requestStockDTO) {
         this.symbol = requestStockDTO.symbol();
         this.companyName = requestStockDTO.companyName();
-        this.price = changePrice(requestStockDTO.price(), true);
+        this.price = requestStockDTO.price();
     }
 
     /**
