@@ -84,9 +84,8 @@ public class StockService {
      * This method retrieves the existing stock entity from the associated
      * {@link StockRepository} using the provided ID. If the stock is found, it
      * updates its attributes with the data from the provided {@link Stock} object.
-     * The method then calculates the new stock price using
-     * the {@code changePrice} method and persists the updated
-     * stock entity back to the repository using the {@code save} method.
+     * Persists the updated stock entity back to the repository
+     * using the {@code save} method.
      *
      * @param id The unique identifier of the stock to be updated.
      * @param updatedStock The data representing the updated stock.
@@ -98,8 +97,7 @@ public class StockService {
                 .map(stock -> {
                     stock.setSymbol(updatedStock.getSymbol());
                     stock.setCompanyName(updatedStock.getCompanyName());
-                    double newPrice = stock.changePrice(updatedStock.getPrice(), true);
-                    stock.setPrice(newPrice);
+                    stock.setPrice(updatedStock.getPrice());
 
                     return stockRepository.save(stock);
                 });
