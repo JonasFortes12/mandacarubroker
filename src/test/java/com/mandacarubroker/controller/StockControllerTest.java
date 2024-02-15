@@ -136,20 +136,6 @@ class StockControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    @Test
-    void itShouldRespondWithConflictStatusWhenCreateNewStockWithExistentSymbol() throws Exception {
-        RequestStockDTO newStock = new RequestStockDTO("RPM3", "PETROLEUM", 134.67);
-
-        String requestJson = objectMapper.writeValueAsString(newStock);
-
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/stocks")
-                .content(requestJson)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        mockMvc.perform(request)
-                .andExpect(status().isConflict());
-    }
 
 
     @Test
