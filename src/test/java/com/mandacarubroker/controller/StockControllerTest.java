@@ -149,10 +149,8 @@ class StockControllerTest {
     }
 
 
-
     @Test
     void itShouldUpdateStock() throws Exception {
-
         Stock targetUpdatingStock = stockRepository.findAll().get(0);
 
         targetUpdatingStock.setSymbol("PTL3");
@@ -165,16 +163,31 @@ class StockControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.symbol").value(targetUpdatingStock.getSymbol()))
                 .andExpect(jsonPath("$.companyName").value(targetUpdatingStock.getCompanyName()))
                 .andExpect(jsonPath("$.price").value(targetUpdatingStock.getPrice()));
 
     }
 
+    @Test
+    void itShouldRespondWithOkStatusWhenUpdateStock() throws Exception{
+        Stock targetUpdatingStock = stockRepository.findAll().get(0);
+
+        targetUpdatingStock.setSymbol("PTL3");
+
+        String requestJson = objectMapper.writeValueAsString(targetUpdatingStock);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .put("/stocks/{id}", targetUpdatingStock.getId())
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+    }
 
     @Test
-    void itShouldNotUpdateStockWithNonexistentId() throws Exception {
+    void itShouldRespondWithNotFoundStatusWhenUpdateStockWithNonexistentId() throws Exception {
 
         String nonexistentId = "1a2b3c2d";
         String requestJson = "{"
