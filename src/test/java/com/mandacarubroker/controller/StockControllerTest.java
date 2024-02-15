@@ -70,21 +70,28 @@ class StockControllerTest {
 
     @Test
     void itShouldRetrieveStockById() throws Exception {
-
         Stock targetStock = stockRepository.findAll().get(0);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/stocks/{id}",targetStock.getId());
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.symbol").value(targetStock.getSymbol()))
                 .andExpect(jsonPath("$.companyName").value(targetStock.getCompanyName()))
                 .andExpect(jsonPath("$.price").value(targetStock.getPrice()));
     }
 
+    @Test
+    void itShouldRespondWithOkStatusWhenGetStockById() throws Exception {
+        Stock targetStock = stockRepository.findAll().get(0);
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/stocks/{id}",targetStock.getId());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+    }
 
     @Test
-    void itShouldReturnNullAtGetNonexistentStockById() throws Exception {
+    void itShouldRespondWithNotFoundStatusWhenGetNonexistentStockById() throws Exception {
         String nonexistentId = "1a2b3c2d";
         RequestBuilder request = MockMvcRequestBuilders.get("/stocks/{id}", nonexistentId);
 
