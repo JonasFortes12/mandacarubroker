@@ -19,6 +19,9 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -208,7 +211,17 @@ class StockControllerTest {
 
     @Test
     void itShouldDeleteStock() throws Exception  {
+        Stock targetDeletingStock = stockRepository.findAll().get(0);
 
+        RequestBuilder request = MockMvcRequestBuilders
+                .delete("/stocks/{id}", targetDeletingStock.getId());
+
+        mockMvc.perform(request);
+        assertEquals(2, stockRepository.count());
+    }
+
+    @Test
+    void itShouldRespondWithNoContentStatusWhenDeleteStock() throws Exception {
         Stock targetDeletingStock = stockRepository.findAll().get(0);
 
         RequestBuilder request = MockMvcRequestBuilders
@@ -216,12 +229,10 @@ class StockControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
-
     }
 
     @Test
-    void itShouldNotDeleteStockWithNonexistentId() throws Exception  {
-
+    void itShouldRespondWithNotFoundStatusWhenDeleteStockWithNonexistentId() throws Exception  {
         String nonexistentId = "1a2b3c2d";
 
         RequestBuilder request = MockMvcRequestBuilders
@@ -229,8 +240,6 @@ class StockControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isNotFound());
-
     }
 
 }
-
