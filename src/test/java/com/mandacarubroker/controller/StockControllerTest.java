@@ -112,16 +112,29 @@ class StockControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.symbol").value(newStock.symbol()))
                 .andExpect(jsonPath("$.companyName").value(newStock.companyName()))
                 .andExpect(jsonPath("$.price").value(newStock.price()));
 
     }
 
+    @Test
+    void itShouldRespondWithCreatedStatusWhenCreateNewStock() throws Exception{
+        RequestStockDTO newStock = new RequestStockDTO("CMG4", "CEMIG", 129.67);
+
+        String requestJson = objectMapper.writeValueAsString(newStock);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/stocks")
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
+    }
 
     @Test
-    void itShouldNotCreateNewStockWithExistentSymbol() throws Exception {
+    void itShouldRespondWithConflictStatusWhenCreateNewStockWithExistentSymbol() throws Exception {
         RequestStockDTO newStock = new RequestStockDTO("RPM3", "PETROLEUM", 134.67);
 
         String requestJson = objectMapper.writeValueAsString(newStock);
@@ -134,6 +147,7 @@ class StockControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isConflict());
     }
+
 
 
     @Test
