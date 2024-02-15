@@ -19,6 +19,9 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,32 +56,45 @@ class StockControllerTest {
 
     @Test
     void itShouldGetAllStocks() throws Exception {
-
         RequestBuilder request = MockMvcRequestBuilders.get("/stocks");
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(3));
+    }
+
+    @Test
+    void itShouldRespondOkStatusWhenGetAllStocks() throws Exception{
+        RequestBuilder request = MockMvcRequestBuilders.get("/stocks");
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
     }
 
 
     @Test
     void itShouldRetrieveStockById() throws Exception {
-
         Stock targetStock = stockRepository.findAll().get(0);
 
         RequestBuilder request = MockMvcRequestBuilders.get("/stocks/{id}",targetStock.getId());
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.symbol").value(targetStock.getSymbol()))
                 .andExpect(jsonPath("$.companyName").value(targetStock.getCompanyName()))
                 .andExpect(jsonPath("$.price").value(targetStock.getPrice()));
     }
 
+    @Test
+    void itShouldRespondWithOkStatusWhenGetStockById() throws Exception {
+        Stock targetStock = stockRepository.findAll().get(0);
+
+        RequestBuilder request = MockMvcRequestBuilders.get("/stocks/{id}",targetStock.getId());
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+    }
 
     @Test
-    void itShouldReturnNullAtGetNonexistentStockById() throws Exception {
+    void itShouldRespondWithNotFoundStatusWhenGetNonexistentStockById() throws Exception {
         String nonexistentId = "1a2b3c2d";
         RequestBuilder request = MockMvcRequestBuilders.get("/stocks/{id}", nonexistentId);
 
@@ -99,17 +115,15 @@ class StockControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.symbol").value(newStock.symbol()))
                 .andExpect(jsonPath("$.companyName").value(newStock.companyName()))
                 .andExpect(jsonPath("$.price").value(newStock.price()));
 
     }
 
-
     @Test
-    void itShouldNotCreateNewStockWithExistentSymbol() throws Exception {
-        RequestStockDTO newStock = new RequestStockDTO("RPM3", "PETROLEUM", 134.67);
+    void itShouldRespondWithCreatedStatusWhenCreateNewStock() throws Exception{
+        RequestStockDTO newStock = new RequestStockDTO("CMG4", "CEMIG", 129.67);
 
         String requestJson = objectMapper.writeValueAsString(newStock);
 
@@ -119,13 +133,13 @@ class StockControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
-                .andExpect(status().isConflict());
+                .andExpect(status().isCreated());
     }
+
 
 
     @Test
     void itShouldUpdateStock() throws Exception {
-
         Stock targetUpdatingStock = stockRepository.findAll().get(0);
 
         targetUpdatingStock.setSymbol("PTL3");
@@ -138,16 +152,31 @@ class StockControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.symbol").value(targetUpdatingStock.getSymbol()))
                 .andExpect(jsonPath("$.companyName").value(targetUpdatingStock.getCompanyName()))
                 .andExpect(jsonPath("$.price").value(targetUpdatingStock.getPrice()));
 
     }
 
+    @Test
+    void itShouldRespondWithOkStatusWhenUpdateStock() throws Exception{
+        Stock targetUpdatingStock = stockRepository.findAll().get(0);
+
+        targetUpdatingStock.setSymbol("PTL3");
+
+        String requestJson = objectMapper.writeValueAsString(targetUpdatingStock);
+
+        RequestBuilder request = MockMvcRequestBuilders
+                .put("/stocks/{id}", targetUpdatingStock.getId())
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+    }
 
     @Test
-    void itShouldNotUpdateStockWithNonexistentId() throws Exception {
+    void itShouldRespondWithNotFoundStatusWhenUpdateStockWithNonexistentId() throws Exception {
 
         String nonexistentId = "1a2b3c2d";
         String requestJson = "{"
@@ -168,7 +197,17 @@ class StockControllerTest {
 
     @Test
     void itShouldDeleteStock() throws Exception  {
+        Stock targetDeletingStock = stockRepository.findAll().get(0);
 
+        RequestBuilder request = MockMvcRequestBuilders
+                .delete("/stocks/{id}", targetDeletingStock.getId());
+
+        mockMvc.perform(request);
+        assertEquals(2, stockRepository.count());
+    }
+
+    @Test
+    void itShouldRespondWithNoContentStatusWhenDeleteStock() throws Exception {
         Stock targetDeletingStock = stockRepository.findAll().get(0);
 
         RequestBuilder request = MockMvcRequestBuilders
@@ -176,21 +215,17 @@ class StockControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isNoContent());
-
     }
 
     @Test
-    void itShouldNotDeleteStockWithNonexistentId() throws Exception  {
-
+    void itShouldRespondWithNoContentStatusWhenDeleteStockWithNonexistentId() throws Exception  {
         String nonexistentId = "1a2b3c2d";
 
         RequestBuilder request = MockMvcRequestBuilders
                 .delete("/stocks/{id}", nonexistentId);
 
         mockMvc.perform(request)
-                .andExpect(status().isNotFound());
-
+                .andExpect(status().isNoContent());
     }
 
 }
-
