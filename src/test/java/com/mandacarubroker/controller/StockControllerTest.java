@@ -53,12 +53,18 @@ class StockControllerTest {
 
     @Test
     void itShouldGetAllStocks() throws Exception {
-
         RequestBuilder request = MockMvcRequestBuilders.get("/stocks");
 
         mockMvc.perform(request)
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(3));
+    }
+
+    @Test
+    void itShouldRespondOkStatusWhenGetAllStocks() throws Exception{
+        RequestBuilder request = MockMvcRequestBuilders.get("/stocks");
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
     }
 
 
