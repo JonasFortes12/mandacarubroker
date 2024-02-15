@@ -73,9 +73,9 @@ public class StockService {
      * @throws ConstraintViolationException If the provided data is not valid.
      */
     public Stock createStock(final RequestStockDTO data) {
-        Stock novaAcao = new Stock(data);
+        Stock newStock = new Stock(data);
         validateRequestStockDTO(data);
-        return stockRepository.save(novaAcao);
+        return stockRepository.save(newStock);
     }
 
     /**
@@ -166,7 +166,7 @@ public class StockService {
     public void validateAndCreateStock(final RequestStockDTO data) {
         validateRequestStockDTO(data);
 
-        Stock novaAcao = new Stock(data);
-        stockRepository.save(novaAcao);
+        Stock newStock = new Stock(data);
+        stockRepository.save(newStock);
     }
 }
